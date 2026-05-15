@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ГОС Экзамен: Социальная работа (ВГУ им. Машерова)</title>
+    <style>
+        /* Базовые переменные (Светлая тема) */
+        :root {
+            --bg-body: #f5f5f7;
+            --bg-card: #ffffff;
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --accent: #0071e3;
+            --accent-hover: #005bb5;
+            --border: #e5e5ea;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Темная тема */
+        [data-theme="dark"] {
+            --bg-body: #000000;
+            --bg-card: #1c1c1e;
+            --text-main: #f5f5f7;
+            --text-muted: #98989d;
+            --accent: #0a84ff;
+            --accent-hover: #409cff;
+            --border: #38383a;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--text-muted);
+        }
+
+        /* Навигация (вкладки) */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        /* Контейнеры предметов */
+        .subject-section {
+            display: none;
+        }
+
+        .subject-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Аккордеон вопросов */
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .question-header {
+            padding: 18px 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-header:hover {
+            background-color: rgba(150, 150, 150, 0.05);
+        }
+
+        .question-header::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-muted);
+        }
+
+        .question-card.open .question-header::after {
+            content: '−';
+        }
+
+        .question-body {
+            display: none;
+            padding: 0 20px 20px 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 5px;
+            padding-top: 15px;
+        }
+
+        .question-card.open .question-body {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Внутреннее форматирование ответа */
+        .thesis {
+            background-color: rgba(0, 113, 227, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .key-points {
+            background-color: rgba(134, 134, 139, 0.1);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        p { margin-bottom: 10px; }
+        ul { margin-bottom: 10px; padding-left: 20px; }
+        strong { color: var(--accent); }
+
+        /* Кнопка печати */
+        .print-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .print-btn:hover {
+            border-color: var(--text-muted);
+        }
+
+        /* --- СТИЛИ ДЛЯ ПЕЧАТИ --- */
+        @media print {
+            body.printing * {
+                visibility: hidden; /* Скрываем все */
+            }
+            body.printing .print-active, 
+            body.printing .print-active * {
+                visibility: visible; /* Показываем только активную карточку */
+            }
+            body.printing .print-active {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                background-color: white !important;
+                color: black !important;
+            }
+            body.printing .print-active .thesis {
+                background-color: transparent;
+                border-left: 4px solid black;
+            }
+            body.printing .print-active .key-points {
+                background-color: transparent;
+                border: 1px solid black;
+            }
+            body.printing .print-active strong {
+                color: black;
+            }
+            body.printing .print-btn {
+                display: none !important; /* Прячем саму кнопку на бумаге */
+            }
+            .question-header::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ГОС Экзамен: Социальная работа</h1>
+        <button class="theme-toggle" id="themeToggle">🌓 Тема</button>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-target="history">История</button>
+        <button class="tab-btn" data-target="theory">Теория</button>
+        <button class="tab-btn" data-target="technologies">Технологии</button>
+    </div>
+
+    <main>
+        <!-- РАЗДЕЛ 1: ИСТОРИЯ СОЦИАЛЬНОЙ РАБОТЫ -->
+        <section id="history" class="subject-section active">
+            <h2>История социальной работы</h2>
+            <br>
+
+                        <!-- ВОПРОС 1 -->
+            <div class="question-card">
+                <div class="question-header">1. Феномен социальной помощи и поддержки в обществе: исторический контекст</div>
+                <div class="question-body">
+                    <div class="thesis">
+                        <strong>Тезис:</strong> Социальная помощь — это исторически перманентный процесс, присущий любому этапу развития общества. Её фундаментом является принцип альтруизма, а главными функциями — утилитарная (выживание) и стабилизирующая (сохранение порядка).
+                    </div>
+                    
+                    <p><strong>Историко-философские основы:</strong> Феномен помощи опирается на принцип альтруизма (бескорыстной заботы о других). Это базовый принцип, без которого невозможно выживание социума. Процесс оказания помощи исторически перманентен — он существовал всегда, менялись лишь формы.</p>
+                    
+                    <p><strong>Субъект и объект:</strong> Субъект — тот, кто оказывает помощь (государство, церковь, община, филантроп). Объект — тот, кто в ней нуждается (сироты, вдовы, инвалиды, старики).</p>
+                    
+                    <p><strong>Каналы взаимосвязей:</strong> Помощь реализуется через индивидуальные (межличностная поддержка) и коллективные (община, государство) каналы социальных взаимосвязей.</p>
+
+                    <p><strong>Ключевые функции в обществе:</strong>
+                        <br>1. <em>Утилитарная</em> — практическое решение проблем (накормить, вылечить, дать кров).
+                        <br>2. <em>Стабилизирующая</em> — снятие социального напряжения, предотвращение бунтов и деградации общества.
+                    </p>
+                    
+                    <p><strong>Исторические модели и парадигмы:</strong> В процессе цивилизационного развития сформировались индивидуальное (западная модель) и коллективистское (отечественная модель) начала. Сегодня практика социальной работы приобретает глобальный характер, объединяя международный опыт (ООН, Красный Крест и др.).</p>
+
+                    <div class="key-points">
+                        <strong>Ключевое для запоминания:</strong>
+                        <ul>
+                            <li><strong>Альтруизм</strong> — базовая философская основа соц. помощи.</li>
+                            <li><strong>Историческая перманентность</strong> — помощь существовала во все эпохи.</li>
+                            <li><strong>Две главные функции:</strong> утилитарная и стабилизирующая.</li>
+                            <li><strong>Два начала в практике:</strong> индивидуальное (Запад) и коллективистское (Славяне).</li>
+                        </ul>
+                    </div>
+                    <button class="print-btn" onclick="printCard(this)">🖨️ Распечатать ответ</button>
+                </div>
+            </div>
+
+            <!-- ВОПРОС 2 -->
+            <div class="question-card">
+                <div class="question-header">2. Модели социальной помощи и поддержки в архаических обществах и цивилизационных общностях Древнего Востока</div>
+                <div class="question-body">
+                    <div class="thesis">
+                        <strong>Тезис:</strong> В архаичном обществе помощь строилась на инстинктах выживания рода (реципрокация, табу). С переходом к цивилизациям Древнего Востока забота о нуждающихся закрепляется в первых письменных законах и религиозно-этических учениях.
+                    </div>
+                    
+                    <p><strong>Первобытное общество (Архаика):</strong> Зарождение древнейших форм защиты неразрывно связано с общиной. Главная цель — физическое выживание племени. Помощь носила сакральный (священный) характер.</p>
+                    <p><strong>Механизмы архаичной помощи:</strong>
+                        <br>- <em>Реципрокация</em> — обязательный эквивалентный обмен дарами и взаимопомощью.
+                        <br>- <em>Редистрибуция</em> — перераспределение излишков (добычи) вождями в пользу слабых.
+                        <br>- <em>Табуирование</em> — жесткие запреты на агрессию внутри рода, защита детей и беременных.
+                    </p>
+                    
+                    <p><strong>Древний Восток (Египет, Месопотамия, Индия):</strong> Возникают государства, и помощь становится регулируемой. Появляются первые социальные законодательства, защищающие уязвимые слои (вдов, сирот, должников) от произвола богатых.</p>
+                    
+                    <p><strong>Исторические законы и учения:</strong>
+                        <br>- <em>Законы Хаммурапи (Вавилон)</em> — ограничение долгового рабства, защита прав вдов и сирот, талион ("око за око" как мера справедливости).
+                        <br>- <em>Законы Ману (Индия)</em> — кастовая система взаимопомощи, обязанность домохозяев подавать милостыню.
+                        <br>- <em>Законы Моисея (Древняя Палестина)</em> — десятина в пользу бедных, прощение долгов в юбилейные (субботние) годы.
+                        <br>- <em>Социально-этические учения</em> — Будда (сострадание и ненасилие ко всему живому) и Конфуций (милосердие правителя, принцип «жэнь» — человеколюбие).
+                    </p>
+
+                    <div class="key-points">
+                        <strong>Ключевое для запоминания:</strong>
+                        <ul>
+                            <li><strong>Реципрокация и редистрибуция</strong> — обмен и перераспределение благ в племенах.</li>
+                            <li><strong>Законы Хаммурапи</strong> — первые правовые нормы защиты слабых.</li>
+                            <li><strong>Законы Моисея</strong> — прощение долгов, институционализация благотворительности.</li>
+                            <li><strong>Учения Востока:</strong> Буддизм (сострадание), Конфуцианство (человеколюбие).</li>
+                        </ul>
+                    </div>
+                    <button class="print-btn" onclick="printCard(this)">🖨️ Распечатать ответ</button>
+                </div>
+            </div>
+
+            <!-- ТРЕТИЙ ВОПРОС (Древняя Греция) У ВАС УЖЕ ВСТАВЛЕН В ШАБЛОН -->
+
+            <!-- ВОПРОС 4 -->
+            <div class="question-card">
+                <div class="question-header">4. Социальное законодательство, общественное призрение и благотворительность в Древнем Риме</div>
+                <div class="question-body">
+                    <div class="thesis">
+                        <strong>Тезис:</strong> Древний Рим заложил основы юриспруденции в социальной сфере (понятия опеки, дееспособности), ввел централизованные пенсии для ветеранов и использовал массовые зрелища и раздачи хлеба как инструмент государственной соц. поддержки.
+                    </div>
+                    
+                    <p><strong>Взаимодействие общества и государства:</strong> В Риме впервые четко разделились государственное (публичное) и частное право. Возникли базовые для современной соц. работы юридические категории: <em>«дееспособность»</em>, <em>«опека»</em> (над несовершеннолетними), <em>«попечительство»</em>.</p>
+                    
+                    <p><strong>Институт Патроната:</strong> Система взаимоотношений <em>патрона</em> (богатого и влиятельного гражданина) и <em>клиента</em> (бедного гражданина или вольноотпущенника). Патрон оказывал юридическую и материальную помощь, а клиент поддерживал патрона на выборах. Это ранняя форма частной соц. поддержки.</p>
+                    
+                    <p><strong>Государственное призрение:</strong> Древний Рим — родина первого <em>централизованного пенсионного обеспечения</em>. Ветераны легионов после службы получали земельные наделы и денежные выплаты от государства.</p>
+                    
+                    <p><strong>«Хлеба и зрелищ»:</strong> Форма гос. помощи беднейшим слоям (пролетариату). Регулярные раздачи дешевого или бесплатного зерна (аннона), масла и мяса. Массовые зрелища (триумфы, гладиаторские бои) служили для снятия социальной напряженности.</p>
+                    
+                    <p><strong>Семья и образование:</strong> Римское законодательство строго регулировало брак (власть отца семейства — paterfamilias). Роль женщины в Риме была свободнее, чем в Греции. Римская школа стала основой современных систем образования (тривиум и квадривиум).</p>
+                    <p><strong>Меценатство:</strong> Покровительство наукам и искусствам (по имени Гая Цильния Мецената, покровителя Горация и Вергилия).</p>
+
+                    <div class="key-points">
+                        <strong>Ключевое для запоминания:</strong>
+                        <ul>
+                            <li><strong>Базовые категории:</strong> дееспособность, опека, попечительство.</li>
+                            <li><strong>Патронат</strong> — система материальной и правовой защиты клиентов богатыми гражданами.</li>
+                            <li><strong>Пенсии ветеранам</strong> — первая централизованная система обеспечения.</li>
+                            <li><strong>«Хлеба и зрелищ» (Аннона)</strong> — господдержка для снятия напряжения.</li>
+                            <li><strong>Меценатство</strong> — частная поддержка культуры и образования.</li>
+                        </ul>
+                    </div>
+                    <button class="print-btn" onclick="printCard(this)">🖨️ Распечатать ответ</button>
+                </div>
+            </div>
+
+            <!-- ВОПРОС 5 -->
+            <div class="question-card">
+                <div class="question-header">5. Социальная помощь и благотворительность в зарубежных странах в период средневековья (V – первая половина XVII в.)</div>
+                <div class="question-body">
+                    <div class="thesis">
+                        <strong>Тезис:</strong> В Средние века помощь полностью подчинялась христианской парадигме и осуществлялась церковью (монашеские ордены). В период Возрождения из-за массового нищенства на смену церковной приходит городская коммунальная модель.
+                    </div>
+                    
+                    <p><strong>Христианская парадигма:</strong> Помощь рассматривалась как путь к личному спасению души дающего («милостыня очищает грехи»). <em>Каролингская система</em> (эпоха Карла Великого) обязала приходы отдавать треть доходов на помощь бедным.</p>
+                    
+                    <p><strong>Деятельность монашеских орденов:</strong> Монастыри были главными центрами призрения. Возникает специализация орденов:
+                        <br>- <em>Францисканцы и доминиканцы</em> — помощь нищим и проповедь в городах.
+                        <br>- <em>Тринитарии</em> — выкуп христианских пленных из мусульманского рабства.
+                        <br>- <em>Госпитальеры</em> — лечение больных, создание первых крупных госпиталей.
+                        <br>Создавались полумонашеские приюты для бедных девушек и вдов (бегинки).
+                    </p>
+                    
+                    <p><strong>Переход к коммунальной модели (города):</strong> С ростом городов появляются светские религиозные братства из мирян (ремесленников и купцов), которые открывают свои приюты и больницы.</p>
+                    
+                    <p><strong>Проблема нищенства и кризис XVI-XVII вв.:</strong> Появление огромного числа профессиональных нищих. Государство и города начинают жестко бороться с нищенством (запрет раздачи милостыни на улице). Зарождаются городские <em>уставы о бедных</em> и городская налоговая система для превентивных мер. Формируется гуманистическая концепция (Х.Л. Вивес): фокус на трудоустройстве и обучении бедных.</p>
+                    
+                    <p><strong>Борьба с «ведьмами»:</strong> Массовая социальная патология и инструмент репрессий против маргинализованных слоев (в основном одиноких женщин, вдов, акушерок) в кризисные периоды.</p>
+
+                    <div class="key-points">
+                        <strong>Ключевое для запоминания:</strong>
+                        <ul>
+                            <li><strong>Каролингская система</strong> — приходская забота о бедных (треть доходов церкви).</li>
+                            <li><strong>Специализация орденов:</strong> тринитарии (выкуп пленных), госпитальеры (медицина).</li>
+                            <li><strong>Коммунальная модель</strong> — переход функций помощи от церкви к магистратам (городским властям).</li>
+                            <li><strong>Городские уставы</strong> — запрет профессионального нищенства, налоги на бедных.</li>
+                        </ul>
+                    </div>
+                    <button class="print-btn" onclick="printCard(this)">🖨️ Распечатать ответ</button>
+                </div>
+            </div>
+
+            <!-- ВОПРОС 6 -->
+            <div class="question-card">
+                <div class="question-header">6. Система помощи нуждающимся у восточных славян и в Древней Руси (конец I тыс. до н. э. – XIV в.)</div>
+                <div class="question-body">
+                    <div class="thesis">
+                        <strong>Тезис:</strong> У восточных славян практика помощи прошла путь от языческой родовой взаимопомощи к системе государственно-княжеской и церковно-монастырской благотворительности, закрепленной Крещением Руси в 988 году.
+                    </div>
+                    
+                    <p><strong>Помощь у восточных славян (до 988 г.):</strong> Исторические корни лежат в общинном строе. Важнейшие виды: круговая порука, помочь (толока) — коллективный бескорыстный труд при постройке дома или сборе урожая, забота о сиротах (приймачество), почитание старцев.</p>
+                    
+                    <p><strong>Крещение Руси (988 г.) и роль православия:</strong> С принятием христианства князем Владимиром помощь переходит на новый уровень. Формируется идеология <em>«нищелюбия»</em> — личного милосердия и раздачи милостыни. Нищие воспринимались как «Божьи люди», молящиеся за грехи благотворителя.</p>
+                    
+                    <p><strong>Церковный Устав Владимира Святого (996 г.):</strong> Исторический документ, который законодательно поручил опеку над «сирыми и убогими» (вдовами, сиротами, калеками, странниками) церкви. Владимир выделил десятину (10% доходов княжества) на содержание церквей, больниц и богаделен.</p>
+                    
+                    <p><strong>Взаимодействие церкви и княжеской власти:</strong>
+                        <br>- <em>Княжеская благотворительность:</em> раздача еды и денег на княжеском дворе, отправка телег с хлебом и медом для больных и немощных прямо по улицам Киева (инициатива князя Владимира). Владимир Мономах в «Поучении» призывал сыновей защищать вдов и кормить сирот.
+                        <br>- <em>Церковно-монастырское призрение:</em> Киево-Печерская лавра (Феодосий Печерский) стала центром помощи, где строились странноприимные дома и кормили бедных.
+                    </p>
+                    
+                    <p><strong>Общинная психология:</strong> Сформировала национальный характер наших предков — сострадание, коллективизм, соборность, готовность помочь ближнему в беде (что позже отразится в менталитете белорусов).</p>
+
+                    <div class="key-points">
+                        <strong>Ключевое для запоминания:</strong>
+                        <ul>
+                            <li><strong>Толока и приймачество</strong> — древнеславянские формы взаимопомощи.</li>
+                            <li><strong>Крещение Руси (988 г.)</strong> — начало идеологии «нищелюбия» и милостыни.</li>
+                            <li><strong>Устав Владимира Святого</strong> — передача функций призрения церкви, выделение «десятины».</li>
+                            <li><strong>Владимир Мономах («Поучение»)</strong> — закрепление традиций княжеского милосердия.</li>
+                            <li><strong>Киево-Печерская лавра</strong> — первый крупный центр церковно-монастырского призрения.</li>
+                        </ul>
+                    </div>
+                    <button class="print-btn" onclick="printCard(this)">🖨️ Распечатать ответ</button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- РАЗДЕЛ 2: ТЕОРИЯ СОЦИАЛЬНОЙ РАБОТЫ -->
+        <section id="theory" class="subject-section">
+            <h2>Теория социальной работы</h2>
+            <br>
+            <!-- Сюда будем добавлять вопросы по Теории -->
+        </section>
+
+        <!-- РАЗДЕЛ 3: ТЕХНОЛОГИИ СОЦИАЛЬНОЙ РАБОТЫ -->
+        <section id="technologies" class="subject-section">
+            <h2>Технологии социальной работы</h2>
+            <br>
+            <!-- Сюда будем добавлять вопросы по Технологиям -->
+        </section>
+    </main>
+
+    <script>
+        // Логика переключения тем
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Логика переключения вкладок
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.subject-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Снимаем активность со всех вкладок и секций
+                tabBtns.forEach(b => b.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Добавляем активность нажатой
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        // Логика аккордеона (раскрытие вопросов)
+        // Делегирование событий (работает для динамически добавленных вопросов)
+        document.body.addEventListener('click', (e) => {
+            if (e.target.classList.contains('question-header')) {
+                const card = e.target.closest('.question-card');
+                card.classList.toggle('open');
+            }
+        });
+
+        // Логика умной печати
+        function printCard(btnElement) {
+            const card = btnElement.closest('.question-card');
+            
+            // Раскрываем карточку, если она закрыта, чтобы печать прошла успешно
+            card.classList.add('open');
+            
+            // Добавляем спец. классы для CSS @media print
+            document.body.classList.add('printing');
+            card.classList.add('print-active');
+            
+            // Вызываем окно печати
+            window.print();
+        }
+
+        // Очищаем классы после завершения/отмены печати
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('printing');
+            const activeCard = document.querySelector('.print-active');
+            if (activeCard) {
+                activeCard.classList.remove('print-active');
+            }
+        });
+    </script>
+</body>
+</html>
